@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/gameforce-hub-dev.jar --server.port=$PORT $JAR_OPTS
+web: java $JAVA_OPTS -jar target/gameforce-hub-0.1.jar --server.port=$PORT $JAR_OPTS
