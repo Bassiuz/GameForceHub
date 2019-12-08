@@ -1,1 +1,0 @@
-web: mvn package; docker build -f src/main/docker/Dockerfile.jvm -t quarkus/using-spring-di-jvm .; docker run -i --rm -p 8080:$PORT quarkus/using-spring-di-jvm;
