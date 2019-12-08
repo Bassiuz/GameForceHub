@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar target/gameforce-hub-0.1.jar --server.port=$PORT $JAR_OPTS
+web: mvn package; docker build -f src/main/docker/Dockerfile.jvm -t quarkus/using-spring-di-jvm .; docker run -i --rm -p 8080:$PORT quarkus/using-spring-di-jvm;
