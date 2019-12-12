@@ -33,7 +33,6 @@ public class GreetingController {
 
     @GetMapping("/{name}")
     public Greeting hello(@PathVariable(name = "name") String name) {
-        String energy = System.getenv().get("ENERGY");
-        return new Greeting(greetingBean.greet(energy));
+        return new Greeting(greetingBean.greet(name));
     }
 }
