@@ -8,4 +8,6 @@ public interface WerFileRepository extends CrudRepository<WerFile, Long> {
 
     List<WerFile> findByUploadDate(LocalDate date);
 
+    boolean existsWerFileByFileName(String fileName);
+
 }
