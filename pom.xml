@@ -33,7 +33,7 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-mysql</artifactId>
+      <artifactId>quarkus-jdbc-postgresql</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -57,11 +57,6 @@
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-mysql</artifactId>
-      <version>${quarkus.version}</version>
     </dependency>
   </dependencies>
   <build>
@@ -112,6 +107,39 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <skip>${skipTests}</skip>
+          <images>
+            <image>
+              <name>postgres:11.5</name>
+              <alias>postgresql</alias>
+              <run>
+                <env>
+                  <POSTGRES_USER>quarkus_test</POSTGRES_USER>
+                  <POSTGRES_PASSWORD>quarkus_test</POSTGRES_PASSWORD>
+                  <POSTGRES_DB>quarkus_test</POSTGRES_DB>
+                </env>
+                <ports>
+                  <port>5432:5432</port>
+                </ports>
+                <log>
+                  <prefix>PostgreSQL:</prefix>
+                  <date>default</date>
+                  <color>cyan</color>
+                </log>
+                <wait>
+                  <tcp>
+                    <mode>mapped</mode>
+                    <ports>
+                      <port>5432</port>
+                    </ports>
+                  </tcp>
+                  <time>10000</time>
+                </wait>
+              </run>
+            </image>
+          </images>
+        </configuration>
       </plugin>
     </plugins>
   </build>
