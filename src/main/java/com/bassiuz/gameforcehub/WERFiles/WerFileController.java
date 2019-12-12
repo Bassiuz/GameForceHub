@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/WERFiles")
-public class WERFileController {
+@RequestMapping("/WerFile")
+public class WerFileController {
 
-    @GetMapping("/test")
-    public String test() {
-        return "testerquester";
+    @GetMapping("/{name}")
+    public String hello(@PathVariable(name = "name") String name) {
+        return name;
     }
-
 }

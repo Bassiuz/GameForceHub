@@ -33,6 +33,7 @@ public class GreetingController {
 
     @GetMapping("/{name}")
     public Greeting hello(@PathVariable(name = "name") String name) {
-        return new Greeting(greetingBean.greet(name));
+        return new Greeting(greetingBean.greet(new
+                com.bassiuz.gameforcehub.WERFiles.WerFile().toString()));
     }
 }
