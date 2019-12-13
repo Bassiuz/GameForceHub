@@ -1,5 +1,6 @@
 package com.bassiuz.gameforcehub.WERFiles;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,6 +15,8 @@ public class WerFile {
 
     private LocalDate uploadDate;
     private String fileName;
+
+    @Column(length = 3000000)
     private String xmlValue;
 
 

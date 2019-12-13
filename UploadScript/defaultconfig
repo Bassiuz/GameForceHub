@@ -1,2 +1,4 @@
+[parser]
 FILE_LOCATION=""
 BACKEND_URL=""
+POST_ACTION="/postFile"
