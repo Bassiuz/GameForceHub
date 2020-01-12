@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking</title>
+</head>
+
+<script type="text/javascript" src="https://test.sharepoint.com/sites/devsite/SiteAssets/jquery-1.9.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var i,result;
+        $('#getEmployee').click(function () {
+            var dispalyResults="";
+            $.ajax({
+                url: "/werfiles",
+                method: "GET",
+                headers: { "Accept": "application/json;odata=verbose" },
+                success: function (data) {
+
+                    $('#displayResults').html(data);
+                },
+                fail: function () {
+                    alert("Response fails");
+                }
+            })
+        })
+
+    })
+</script>
+
+<body>
+This is the ranking.
+
+
+<input type="button" value="GET" name="GET" id="getEmployee"/>
+<div id="displayResults"></div>
+
+</body>
+</html>
