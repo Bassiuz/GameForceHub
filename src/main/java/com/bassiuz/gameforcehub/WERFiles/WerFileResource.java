@@ -43,11 +43,11 @@ public class WerFileResource {
     @GET
     @Path("/MostAttendance/{year}")
     @Produces("application/json")
-    public HashMap<String, Integer> MostAttendance(@PathParam int year) {
-        HashMap<String, Integer> result = new HashMap<>();
+    public HashMap<Player, Integer> MostAttendance(@PathParam int year) {
+        HashMap<Player, Integer> result = new HashMap<>();
         for (Player player : playerRepository.findAll())
         {
-           result.put(player.getFirstName() + " " + player.getLastName(), werFileRepository.findByAttendingPlayer(player.getDci(), year).size());
+           result.put(player, werFileRepository.findByAttendingPlayer(player.getDci(), year).size());
         }
         return SortingTool.sortByValue(result);
     }
@@ -55,11 +55,11 @@ public class WerFileResource {
     @GET
     @Path("/MostJudged/{year}")
     @Produces("application/json")
-    public HashMap<String, Integer> MostJudged(@PathParam int year) {
-        HashMap<String, Integer> result = new HashMap<>();
+    public HashMap<Player, Integer> MostJudged(@PathParam int year) {
+        HashMap<Player, Integer> result = new HashMap<>();
         for (Player player : playerRepository.findAll())
         {
-            result.put(player.getFirstName() + " " + player.getLastName(), werFileRepository.findByAmountJudged(player.getDci(),year).size());
+            result.put(player, werFileRepository.findByAmountJudged(player.getDci(),year).size());
         }
         return SortingTool.sortByValue(result);
     }
