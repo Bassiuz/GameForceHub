@@ -1,18 +1,16 @@
 package com.bassiuz.gameforcehub.WERFiles;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-
 import com.bassiuz.gameforcehub.Player.Player;
 import com.bassiuz.gameforcehub.Player.PlayerRepository;
 import com.bassiuz.gameforcehub.tools.SortingTool;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.xml.sax.SAXException;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,12 +19,10 @@ import java.util.HashMap;
 @Path("/WerFiles")
 public class WerFileResource {
 
-    private final WerFileRepository werFileRepository;
-    private final PlayerRepository playerRepository;
+    private final WerFileRepository werFileRepository = new WerFileRepository();
+    private final PlayerRepository playerRepository = new PlayerRepository();
 
-    public WerFileResource(WerFileRepository werFileRepository, PlayerRepository playerRepository) {
-        this.werFileRepository = werFileRepository;
-        this.playerRepository = playerRepository;
+    public WerFileResource() {
     }
 
     @GET
@@ -51,7 +47,7 @@ public class WerFileResource {
         HashMap<String, Integer> result = new HashMap<>();
         for (Player player : playerRepository.findAll())
         {
-           result.put(player.getFirstName() + " " + player.getLastName(), werFileRepository.findByAttendingPlayer(player.getId(), year).size());
+           result.put(player.getFirstName() + " " + player.getLastName(), werFileRepository.findByAttendingPlayer(player.getDci(), year).size());
         }
         return SortingTool.sortByValue(result);
     }
@@ -63,7 +59,7 @@ public class WerFileResource {
         HashMap<String, Integer> result = new HashMap<>();
         for (Player player : playerRepository.findAll())
         {
-            result.put(player.getFirstName() + " " + player.getLastName(), werFileRepository.findByAmountJudged(player.getId(),year).size());
+            result.put(player.getFirstName() + " " + player.getLastName(), werFileRepository.findByAmountJudged(player.getDci(),year).size());
         }
         return SortingTool.sortByValue(result);
     }

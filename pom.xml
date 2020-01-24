@@ -34,14 +34,6 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-spring-data-jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-jdbc-mysql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-jsonb</artifactId>
     </dependency>
     <dependency>
@@ -114,36 +106,6 @@
         </executions>
         <configuration>
           <skip>${skipTests}</skip>
-          <images>
-            <image>
-              <name>postgres:11.5</name>
-              <alias>postgresql</alias>
-              <run>
-                <env>
-                  <POSTGRES_USER>quarkus_test</POSTGRES_USER>
-                  <POSTGRES_PASSWORD>quarkus_test</POSTGRES_PASSWORD>
-                  <POSTGRES_DB>quarkus_test</POSTGRES_DB>
-                </env>
-                <ports>
-                  <port>5432:5432</port>
-                </ports>
-                <log>
-                  <prefix>PostgreSQL:</prefix>
-                  <date>default</date>
-                  <color>cyan</color>
-                </log>
-                <wait>
-                  <tcp>
-                    <mode>mapped</mode>
-                    <ports>
-                      <port>5432</port>
-                    </ports>
-                  </tcp>
-                  <time>10000</time>
-                </wait>
-              </run>
-            </image>
-          </images>
         </configuration>
       </plugin>
     </plugins>

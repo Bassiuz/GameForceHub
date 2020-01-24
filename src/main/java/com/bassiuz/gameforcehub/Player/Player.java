@@ -2,19 +2,11 @@ package com.bassiuz.gameforcehub.Player;
 
 import org.w3c.dom.Node;
 
-import javax.persistence.*;
 
-@Entity
 public class Player {
-
-    @Id
-    @GeneratedValue
-    private Long id;
 
     private String firstName;
     private String lastName;
-
-    @Column(name = "dci", unique=true)
     private String dci;
 
     public static Player findOrCreatePlayer(Node node, PlayerRepository playerRepository)
@@ -22,12 +14,11 @@ public class Player {
         Player player = playerRepository.findByDci(node.getAttributes().getNamedItem("id").getNodeValue());
         if (player == null)
         {
-            return new Player(node);
+            player = new Player(node);
+            new PlayerRepository().save(player);
         }
-        else
-        {
-            return player;
-        }
+
+        return player;
     }
 
     public Player(Node node) {
@@ -37,10 +28,6 @@ public class Player {
     }
 
     public Player(){}
-
-    public Long getId() {
-        return id;
-    }
 
     public String getFirstName() {
         return firstName;

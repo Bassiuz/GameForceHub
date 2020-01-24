@@ -2,41 +2,23 @@ package com.bassiuz.gameforcehub.WERFiles;
 
 import com.bassiuz.gameforcehub.Player.Player;
 import com.bassiuz.gameforcehub.Player.PlayerRepository;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
-import javax.persistence.*;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@NamedQuery(name = "WerFile.findAllCustom",
-        query = "SELECT COUNT(w) from WerFile w")
 public class WerFile {
-
-    @Id
-    @GeneratedValue
-    private Long id;
 
     private LocalDate uploadDate;
     private String fileName;
 
-    @Column(length = 3000000)
     private String xmlValue;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
     private List<Player> players = new ArrayList<>();
 
-    @ManyToOne(cascade = {CascadeType.ALL})
     private Player headJudge;
     private Date tournamentDate;
 
@@ -53,10 +35,6 @@ public class WerFile {
 
     public void parseObjectFromXML(PlayerRepository playerRepository) throws SAXException {
         WerFileParser.parseWerFile(this, playerRepository);
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public LocalDate getUploadDate() {
@@ -95,13 +73,6 @@ public class WerFile {
         }
     }
 
-    @Override
-    public String toString() {
-        return "WerFile{" +
-                "id=" + id +
-                '}';
-    }
-
     public Collection<Player> getPlayerList() {
         return players;
     }
@@ -128,5 +99,9 @@ public class WerFile {
 
     public void setTournamentDate(Date tournamentDate) {
         this.tournamentDate = tournamentDate;
+    }
+
+    public boolean hasPlayerWithDCI(String dci) {
+        return players.stream().filter(player -> player.getDci().equals(dci)).findFirst().isPresent();
     }
 }

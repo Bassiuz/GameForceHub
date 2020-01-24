@@ -1,21 +1,50 @@
 package com.bassiuz.gameforcehub.WERFiles;
 
-import java.time.LocalDate;
-import java.util.Collection;
+import com.bassiuz.gameforcehub.tools.LocalRepository;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import com.bassiuz.gameforcehub.Player.Player;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+public class WerFileRepository{
 
-public interface WerFileRepository extends JpaRepository<WerFile, Long> {
+    private static LocalRepository<WerFile> werFiles = new LocalRepository<>();
 
-    boolean existsWerFileByFileName(String fileName);
+    public boolean existsWerFileByFileName(String fileName)
+    {
+        Optional<WerFile> werFileOptional = werFiles.stream().filter(werFile -> werFile.getFileName().equals(fileName)).findFirst();
+        return werFileOptional.isPresent();
+    }
 
-    @Query("select w from WerFile w inner join w.players p where p.id = :id AND YEAR(w.tournamentDate) = :year")
-    List<WerFile> findByAttendingPlayer(@Param("id") Long id, @Param("year") int year);
+    public WerFile getByWerFileByFileName(String fileName)
+    {
+        Optional<WerFile> werFileOptional = werFiles.stream().filter(werFile -> werFile.getFileName().equals(fileName)).findFirst();
 
-    @Query("select w from WerFile w where headJudge.id = :id AND YEAR(w.tournamentDate) = :year")
-    List<WerFile> findByAmountJudged(@Param("id") Long id, @Param("year") int year);
+        if(werFileOptional.isEmpty())
+            return null;
+
+        return werFileOptional.get();
+    }
+
+    public List<WerFile> findByAttendingPlayer(String DCI,  int year)
+    {
+       return  werFiles.stream().filter(werFile -> werFile.getTournamentDate().getYear() == year - 1900 && werFile.hasPlayerWithDCI(DCI)).collect(Collectors.toList());
+    }
+
+    public List<WerFile> findByAmountJudged(String DCI, int year)
+    {
+        return  werFiles.stream().filter(werFile -> werFile.getTournamentDate().getYear() == year - 1900 && werFile.getHeadJudge().getDci().equals(DCI)).collect(Collectors.toList());
+    }
+
+    public ArrayList<WerFile> findAll()
+    {
+        return werFiles;
+    }
+
+
+    public WerFile save(WerFile werFile)
+    {
+        return werFiles.save(werFile, getByWerFileByFileName(werFile.getFileName()));
+    }
 }
