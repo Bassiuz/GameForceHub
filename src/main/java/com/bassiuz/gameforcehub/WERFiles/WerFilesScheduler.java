@@ -23,7 +23,8 @@ public class WerFilesScheduler {
     private final OkHttpClient httpClient = new OkHttpClient();
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    private final String otherBackendUrl = System.getenv("OTHER_BACKEND_URL");
+    private final String otherBackendUrl = System.getenv("OTHER_BACKEND_URL") || System.getProperty("OTHER_BACKEND_URL");
+
     private static boolean warnedAboutNoEnv = false;
     private static final Gson gson = new Gson();
 
@@ -32,18 +33,6 @@ public class WerFilesScheduler {
         if (otherBackendUrl == null && !warnedAboutNoEnv) {
             warnedAboutNoEnv = true;
             System.out.println("No Environment Variable Found for other Backend Url.");
-
-            System.out.println("envs.");
-
-            System.getenv().forEach((k, v) -> {
-                System.out.println(k + ":" + v);
-            });
-
-            System.out.println("props.");
-
-            System.getProperties().forEach((k, v) -> {
-                System.out.println(k + ":" + v);
-            });
         }
         pushUpdates();
         pullUpdates();
