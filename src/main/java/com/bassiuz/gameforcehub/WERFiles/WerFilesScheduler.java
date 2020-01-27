@@ -20,37 +20,41 @@ public class WerFilesScheduler {
     @Scheduled(every="30s")
     void syncBackends() {
         System.out.println("Synchronizing Backends with " + otherBackendUrl);
-        Gson gson = new Gson();
-
-        ArrayList<String> names = new ArrayList<>();
-        for (WerFile werFile : new WerFileRepository().findAll())
+        if (otherBackendUrl != null)
         {
-            names.add(werFile.getFileName());
-        }
+            Gson gson = new Gson();
 
-        // form parameters
-        RequestBody body = RequestBody.create(gson.toJson(names), JSON);
-
-        Request request = new Request.Builder()
-                .url(otherBackendUrl + "/WerFiles/postList")
-                .addHeader("User-Agent", "OkHttp Bot")
-                .post(body)
-                .build();
-
-        try (Response response = httpClient.newCall(request).execute()) {
-
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-            // Get response body
-            String[] unsynced = gson.fromJson(response.body().string(), String[].class);
-            for (String unsyncedName : unsynced)
+            ArrayList<String> names = new ArrayList<>();
+            for (WerFile werFile : new WerFileRepository().findAll())
             {
-                postWerFileToOtherBackend(unsyncedName);
+                names.add(werFile.getFileName());
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            // form parameters
+            RequestBody body = RequestBody.create(gson.toJson(names), JSON);
+
+            Request request = new Request.Builder()
+                    .url(otherBackendUrl + "/WerFiles/postList")
+                    .addHeader("User-Agent", "OkHttp Bot")
+                    .post(body)
+                    .build();
+
+            try (Response response = httpClient.newCall(request).execute()) {
+
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                // Get response body
+                String[] unsynced = gson.fromJson(response.body().string(), String[].class);
+                for (String unsyncedName : unsynced)
+                {
+                    postWerFileToOtherBackend(unsyncedName);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
     private void postWerFileToOtherBackend(String werFileName)
