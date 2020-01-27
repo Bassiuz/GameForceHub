@@ -98,9 +98,13 @@ public class WerFileResource {
 
     @GET
     @Path("/test/allEnvVariables")
+    @Produces("application/json")
     public Map<String, String> allEnvVariables()
     {
         Map<String, String> map = System.getenv();
+        for (Map.Entry <String, String> entry: map.entrySet()) {
+            System.out.println("Variable Name:- " + entry.getKey() + " Value:- " + entry.getValue());
+        }
         return map;
     }
 
