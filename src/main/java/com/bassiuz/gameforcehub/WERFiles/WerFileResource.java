@@ -3,7 +3,9 @@ package com.bassiuz.gameforcehub.WERFiles;
 import com.bassiuz.gameforcehub.Player.Player;
 import com.bassiuz.gameforcehub.Player.PlayerRepository;
 import com.bassiuz.gameforcehub.tools.SortingTool;
+import io.quarkus.scheduler.Scheduled;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.xml.sax.SAXException;
 
@@ -14,6 +16,7 @@ import javax.ws.rs.Produces;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 
 @Path("/WerFiles")
@@ -93,5 +96,12 @@ public class WerFileResource {
         return werFileRepository.save(file);
     }
 
+    @GET
+    @Path("/test/allEnvVariables")
+    public Map<String, String> allEnvVariables()
+    {
+        Map<String, String> map = System.getenv();
+        return map;
+    }
 
 }
