@@ -1,13 +1,19 @@
 package com.bassiuz.gameforcehub.WERFiles;
 
+import com.bassiuz.gameforcehub.Player.Player;
+import com.bassiuz.gameforcehub.Player.PlayerRepository;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.quarkus.scheduler.Scheduled;
 import okhttp3.*;
+import org.xml.sax.SAXException;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
 import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,14 +24,55 @@ public class WerFilesScheduler {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     private final String otherBackendUrl = System.getenv("OTHER_BACKEND_URL");
+    private static final Gson gson = new Gson();
 
     @Scheduled(every="30s")
-    void syncBackends() {
+    void syncBackends() throws IOException, SAXException {
+        pushUpdates();
+        pullUpdates();
+    }
+
+    private void pullUpdates() throws IOException, SAXException {
+        if (otherBackendUrl != null) {
+            System.out.println("Synchronizing Backends by pulling from " + otherBackendUrl);
+            // code request code here
+                Request request = new Request.Builder()
+                        .url(otherBackendUrl + "WerFiles")
+                        .build();
+
+                Response response = httpClient.newCall(request).execute();
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            String responseString = response.body().string();
+            if (responseString.length() > 2)
+            {
+
+                JsonArray unsynced = gson.fromJson(responseString, JsonArray.class);
+                for (JsonElement pa : unsynced) {
+                    {
+
+                        if (new WerFileRepository().getByWerFileByFileName(pa.getAsJsonObject().get("fileName").getAsString()) == null) {
+                            WerFile werFile = new WerFile();
+                            werFile.setXmlValue(pa.getAsJsonObject().get("xmlValue").getAsString());
+                            werFile.setFileName(pa.getAsJsonObject().get("fileName").getAsString());
+                            werFile.setUploadDate(LocalDate.now());
+                            werFile.parseObjectFromXML(new PlayerRepository());
+                            new WerFileRepository().save(werFile);
+
+                            System.out.println(pa.getAsJsonObject().get("fileName").getAsString() + " downloaded");
+                        }
+                    }
+                }
+
+            }
+
+        }
+    }
+
+    private void pushUpdates() {
         if (otherBackendUrl != null)
         {
-            System.out.println("Synchronizing Backends with " + otherBackendUrl);
-
-            Gson gson = new Gson();
+            System.out.println("Synchronizing Backends by pushing to " + otherBackendUrl);
 
             ArrayList<String> names = new ArrayList<>();
             for (WerFile werFile : new WerFileRepository().findAll())
@@ -42,16 +89,12 @@ public class WerFilesScheduler {
                     .post(body)
                     .build();
 
-            int i = 0;
 
             try (Response response = httpClient.newCall(request).execute()) {
-                if (i< 1)
-                {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                     // Get response body
                     String responseString = response.body().string();
-                    System.out.println(responseString);
                     if (request.body().contentLength() > 2)
                     {
                         String[] unsynced = gson.fromJson(responseString, String[].class);
@@ -60,9 +103,6 @@ public class WerFilesScheduler {
                             postWerFileToOtherBackend(unsyncedName);
                         }
                     }
-                    i++;
-                }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -73,7 +113,6 @@ public class WerFilesScheduler {
     private void postWerFileToOtherBackend(String werFileName)
     {
         // form parameters
-        Gson gson = new Gson();
         HashMap<String, String> object = new HashMap<>();
         object.put("fileName", werFileName);
         object.put("xmlValue", new WerFileRepository().getByWerFileByFileName(werFileName).getXmlValue());

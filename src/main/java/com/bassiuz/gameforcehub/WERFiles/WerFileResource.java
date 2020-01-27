@@ -33,12 +33,7 @@ public class WerFileResource {
     public Iterable<WerFile> findAll() {
         for (WerFile werFile : werFileRepository.findAll())
         {
-            try {
-                werFile.parseObjectFromXML(playerRepository);
-                werFileRepository.save(werFile);
-            } catch (SAXException e) {
-                e.printStackTrace();
-            }
+            werFileRepository.save(werFile);
         }
         return werFileRepository.findAll();
     }
