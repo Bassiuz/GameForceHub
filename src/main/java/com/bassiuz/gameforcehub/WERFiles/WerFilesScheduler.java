@@ -66,7 +66,7 @@ public class WerFilesScheduler {
 
                 JsonArray unsynced = gson.fromJson(responseString, JsonArray.class);
                 for (JsonElement pa : unsynced) {
-                    {
+                    {
 
                         if (new WerFileRepository().getByWerFileByFileName(pa.getAsJsonObject().get("fileName").getAsString()) == null) {
                             WerFile werFile = new WerFile();
