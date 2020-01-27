@@ -91,8 +91,9 @@ public class WerFileResource {
     @POST
     @Path("/postFile")
     @Produces("application/json")
-    public WerFile postList(@RequestBody WerFile file) {
+    public WerFile postList(@RequestBody WerFile file) throws SAXException {
         file.setUploadDate(LocalDate.now());
+        file.parseObjectFromXML(new PlayerRepository());
         return werFileRepository.save(file);
     }
 
