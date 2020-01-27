@@ -23,7 +23,17 @@ public class WerFilesScheduler {
     private final OkHttpClient httpClient = new OkHttpClient();
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    private final String otherBackendUrl = System.getenv("OTHER_BACKEND_URL") || System.getProperty("OTHER_BACKEND_URL");
+    private final String otherBackendUrl = getBackendUrl();
+
+    private String getBackendUrl() {
+        if (System.getenv("OTHER_BACKEND_URL") != null)
+            return System.getenv("OTHER_BACKEND_URL");
+        else
+        {
+            return System.getProperty("OTHER_BACKEND_URL");
+        }
+    }
+
 
     private static boolean warnedAboutNoEnv = false;
     private static final Gson gson = new Gson();
