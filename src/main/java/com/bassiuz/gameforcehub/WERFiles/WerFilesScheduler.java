@@ -24,10 +24,15 @@ public class WerFilesScheduler {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     private final String otherBackendUrl = System.getenv("OTHER_BACKEND_URL");
+    private static boolean warnedAboutNoEnv = false;
     private static final Gson gson = new Gson();
 
     @Scheduled(every="30s")
     void syncBackends() throws IOException, SAXException {
+        if (otherBackendUrl == null && !warnedAboutNoEnv) {
+            warnedAboutNoEnv = true;
+            System.out.println("No Environment Variable Found for other Backend Url.");
+        }
         pushUpdates();
         pullUpdates();
     }
