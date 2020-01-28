@@ -12,6 +12,8 @@ import org.xml.sax.SAXException;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,6 +26,9 @@ public class WerFilesScheduler {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     private final String otherBackendUrl = getBackendUrl();
+
+
+
 
     private String getBackendUrl() {
         if (System.getenv("OTHER_BACKEND_URL") != null)

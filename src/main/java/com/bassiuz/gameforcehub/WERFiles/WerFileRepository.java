@@ -3,6 +3,7 @@ package com.bassiuz.gameforcehub.WERFiles;
 import com.bassiuz.gameforcehub.tools.LocalRepository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,5 +47,9 @@ public class WerFileRepository{
     public WerFile save(WerFile werFile)
     {
         return werFiles.save(werFile, getByWerFileByFileName(werFile.getFileName()));
+    }
+
+    public List<WerFile> findAllInRange(Date start, Date end) {
+        return  werFiles.stream().filter(werFile -> werFile.getTournamentDate().before(end) && werFile.getTournamentDate().after(start)).collect(Collectors.toList());
     }
 }

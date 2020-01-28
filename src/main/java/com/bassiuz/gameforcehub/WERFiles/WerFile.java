@@ -15,6 +15,9 @@ public class WerFile {
     private LocalDate uploadDate;
     private String fileName;
 
+    private String sancionId;
+    private String tournamentName;
+
     private String xmlValue;
 
     private List<Player> players = new ArrayList<>();
@@ -103,5 +106,21 @@ public class WerFile {
 
     public boolean hasPlayerWithDCI(String dci) {
         return players.stream().filter(player -> player.getDci().equals(dci)).findFirst().isPresent();
+    }
+
+    public String getSancionId() {
+        return sancionId;
+    }
+
+    public void setSancionId(String sancionId) {
+        this.sancionId = sancionId;
+    }
+
+    public String getTournamentName() {
+        return tournamentName;
+    }
+
+    public void setTournamentName(String tournamentName) {
+        this.tournamentName = tournamentName;
     }
 }

@@ -82,6 +82,16 @@ public class WerFileParser {
                 werFile.setHeadJudge(playerRepository.findByDci(node.getAttributes().getNamedItem("headjudge").getNodeValue()));
             }
 
+            if (node.getAttributes().getNamedItem("sanctionnumber") != null)
+            {
+                werFile.setSancionId(node.getAttributes().getNamedItem("sanctionnumber").getNodeValue());
+            }
+
+            if (node.getAttributes().getNamedItem("title") != null)
+            {
+                werFile.setTournamentName(node.getAttributes().getNamedItem("title").getNodeValue());
+            }
+
         }
 
         if (node.getNodeName().equals("participation"))
