@@ -1,4 +1,4 @@
-package com.bassiuz.WERFiles;
+package com.bassiuz.gameforcehub.WERFiles;
 
 public class WerFileTestXMLValues {
 
@@ -41,4 +41,5 @@ public class WerFileTestXMLValues {
             "    <entry date=\"2019-11-14T11:26:59\" operation=\"UPL\">Results being uploaded.</entry>\n" +
             "  </log>\n" +
             "</event>";
+
 }
