@@ -1,4 +1,4 @@
-FROM openjdk:11
+FROM openjdk:11-jdk-stretch
 WORKDIR /
 ADD target/gameforce-hub-0.1-runner.jar gameforce-hub-0.1-runner.jar
 ADD target/lib lib
