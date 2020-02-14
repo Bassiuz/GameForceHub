@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM balenalib/raspberry-pi-debian-openjdk:8
 WORKDIR /
 ADD target/gameforce-hub-0.1-runner.jar gameforce-hub-0.1-runner.jar
 ADD target/lib lib
