@@ -26,9 +26,7 @@ public class WerFilesScheduler {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
     private final String otherBackendUrl = getBackendUrl();
-
-
-
+    private final boolean enableSyncing = true;
 
     private String getBackendUrl() {
         if (System.getenv("OTHER_BACKEND_URL") != null)
@@ -41,9 +39,8 @@ public class WerFilesScheduler {
 
     private boolean backendUrlAvailable()
     {
-        return otherBackendUrl != null && !otherBackendUrl.equals("");
+        return otherBackendUrl != null && !otherBackendUrl.equals("") && enableSyncing;
     }
-
 
     private static boolean warnedAboutNoEnv = false;
     private static final Gson gson = new Gson();

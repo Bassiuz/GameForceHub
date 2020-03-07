@@ -13,10 +13,8 @@ public class PlayerRepository{
     {
         Optional<Player> optionalPlayer = players.stream().filter(player -> player.getDci().equals(Dci)).findFirst();
 
-        if (optionalPlayer.isEmpty())
-        {
+        if (!optionalPlayer.isPresent())
             return null;
-        }
 
         return optionalPlayer.get();
     }
