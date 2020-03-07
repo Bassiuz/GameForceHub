@@ -32,11 +32,16 @@ public class WerFilesScheduler {
 
     private String getBackendUrl() {
         if (System.getenv("OTHER_BACKEND_URL") != null)
-            return System.getenv("OTHER_BACKEND_URL");
+            return System.getenv("OTHER_BACKEND_URL").replace("\"", "").replace(" ", "");
         else
         {
-            return System.getProperty("OTHER_BACKEND_URL");
+            return System.getProperty("OTHER_BACKEND_URL").replace("\"", "").replace(" ", "");
         }
+    }
+
+    private boolean backendUrlAvailable()
+    {
+        return otherBackendUrl != null && !otherBackendUrl.equals("");
     }
 
 
@@ -45,7 +50,7 @@ public class WerFilesScheduler {
 
     @Scheduled(every="30s")
     void syncBackends() throws IOException, SAXException {
-        if (otherBackendUrl == null && !warnedAboutNoEnv) {
+        if (!backendUrlAvailable() && !warnedAboutNoEnv) {
             warnedAboutNoEnv = true;
             System.out.println("No Environment Variable Found for other Backend Url.");
         }
@@ -54,8 +59,7 @@ public class WerFilesScheduler {
     }
 
     private void pullUpdates() throws IOException, SAXException {
-        if (otherBackendUrl != null) {
-            System.out.println("Synchronizing Backends by pulling from " + otherBackendUrl);
+        if (backendUrlAvailable()) {
             // code request code here
                 Request request = new Request.Builder()
                         .url(otherBackendUrl + "WerFiles")
@@ -91,10 +95,8 @@ public class WerFilesScheduler {
     }
 
     private void pushUpdates() {
-        if (otherBackendUrl != null)
+        if (backendUrlAvailable())
         {
-            System.out.println("Synchronizing Backends by pushing to " + otherBackendUrl);
-
             ArrayList<String> names = new ArrayList<>();
             for (WerFile werFile : new WerFileRepository().findAll())
             {
