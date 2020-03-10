@@ -1,17 +1,12 @@
 
 package com.bassiuz.gameforcehub.metrics;
 
-import com.bassiuz.gameforcehub.Player.Player;
-import com.bassiuz.gameforcehub.Player.PlayerRepository;
 import com.bassiuz.gameforcehub.WERFiles.WerFile;
 import com.bassiuz.gameforcehub.WERFiles.WerFileRepository;
-import com.bassiuz.gameforcehub.tools.SortingTool;
-import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import java.lang.reflect.Array;
 import java.util.*;
 
 @Path("/Metrics/UploadedTournaments")
@@ -21,17 +16,12 @@ public class UploadedTournamentsView {
     @Produces("text/html")
     public String uploadedTournaments() {
 
-        HashMap<String, ArrayList<WerFile>> werFileListByWeek = new HashMap<>();
+        LinkedHashMap<String, ArrayList<WerFile>> werFileListByWeek = new LinkedHashMap<>();
 
         ArrayList<WerFile> werfiles = new WerFileRepository().findAll();
 
-        Collections.sort(werfiles, new Comparator() {
-
-            @Override
-            public int compare(Object o1, Object o2) {
-                return ((WerFile)o1).getTournamentDate().compareTo(((WerFile)o2).getTournamentDate());
-            }
-        });
+        Collections.sort(werfiles, 
+                (o1, o2) -> ((WerFile) o2).getTournamentDate().compareTo(((WerFile) o1).getTournamentDate()));
 
         for (WerFile werFile : werfiles)
         {
